@@ -12,10 +12,10 @@ Game game;
 void setup() {
     gb.begin();
     gb.setFrameRate(60);
-    game.Init();
+    game.init();
 }
 
 void loop() {
     gb.waitForUpdate();
-    game.Loop();
+    game.loop();
 }
