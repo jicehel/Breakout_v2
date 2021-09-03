@@ -4,10 +4,7 @@
 //----------------------------------------------------------------------    
 
 #include <Gamebuino-Meta.h>
-#include "game.h"
-
-Game game;
-
+#include "Global.h"
 
 void setup() {
     gb.begin();
