@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef GAME_CLASS
-#define GAME_CLASS
-
 class Game
 {
 
@@ -49,5 +46,3 @@ public:
     void loop();
     
 };
-
-#endif

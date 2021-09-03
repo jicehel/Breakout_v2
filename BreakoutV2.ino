@@ -6,6 +6,11 @@
 #include <Gamebuino-Meta.h>
 #include "Global.h"
 
+// Objects
+Game game;
+Ball ball;
+// Paddle paddle;
+
 void setup() {
     gb.begin();
     gb.setFrameRate(60);
@@ -15,4 +20,14 @@ void setup() {
 void loop() {
     gb.waitForUpdate();
     game.loop();
+              SerialUSB.print(ball.radius);
+              SerialUSB.print(":");
+              SerialUSB.print(ball.x);
+              SerialUSB.print(":");
+              SerialUSB.print(ball.y);
+              SerialUSB.print(":");
+              SerialUSB.print(ball.moveX);
+              SerialUSB.print(":");
+              SerialUSB.print(ball.moveY);
+              SerialUSB.println("");
 }

@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef BALL_CLASS
-#define BALL_CLASS
+extern Image ball2, ball3, ball4, ball5, ball4Metal;
+
 
 class Ball
 
@@ -11,8 +11,6 @@ private:
 
     // object state
     
-    uint8_t     x, y;
-    uint8_t     radius, moveX, moveY;
     Gamebuino_Meta::Color    color;
     bool        bestroyed;
     bool        free;
@@ -21,11 +19,13 @@ private:
 
 public:
 
+    uint8_t     x, y;
+    uint8_t     radius; 
+    int8_t      moveX, moveY;
+
     void newBall();
     void moveBall(float dt);
     void drawBall();
 
     
 };
-
-#endif
