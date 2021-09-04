@@ -19,7 +19,7 @@
 // 10: brique violette             21: balle d'acier (traverse les briques)
 //---------------------------------------------------------------------------
 
-int8_t level_brick[this -> _NB_LEVEL][this -> ROWS * this -> COLUMNS + 1] = { 
+int8_t level_brick[this -> _NB_LEVEL][this -> _ROWS * this -> _COLUMNS + 1] = { 
   
  { 4, 4,  4,  6,  6,  6,  4,  6, 4,  6,
    6, 3,  6,  6,  6,  3,  6,  6, 3,  6,
@@ -88,10 +88,10 @@ void Level::resetCurrentLevel() {
   this -> brickCount = 0;
   this -> nbBricks = 0;
   this -> nbBonus = 0; 
-  this -> defaultBonusBrick = this -> level_brick[game.level-1][50] ;
+  this -> defaultBonusBrick = level_brick[game.currentLevelNb-1][50] ;
   for (int8_t row = 0; row < this -> _ROWS; row++)
     for (int8_t column = 0; column < this -> _COLUMNS; column++) { 
-      currentLevel[row][column].type_brick = level_brick[game.level-1][row * this -> _COLUMNS + column];
+      currentLevel[row][column].type_brick = level_brick[game.currentLevelNb-1][row * this -> _COLUMNS + column];
       if (currentLevel[row][column].type_brick > 1) {
          this -> nbBricks++;
          currentLevel[row][column].isHit = false;

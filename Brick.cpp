@@ -30,7 +30,7 @@ void collision_brick(int8_t r,int8_t c ) {
   //If a collison has occured
   if (currentLevel[r][c].type_brick > 1) {
          level.brickCount++;
-         level.score = level.score + this-> nbPointsBrick;
+         game.score = game.score + this -> nbPointsBrick;
          // Manage bonus / malus add
          /* if (type_brick[r][c] == 11 || type_brick[r][c] == 12 || type_brick[r][c] == 14 || type_brick[r][c] == 20 || type_brick[r][c] == 21 ) {
             (if game.sound) gb.sound.fx(SBonus); 

@@ -1,12 +1,8 @@
 #pragma once
-#include "Brick.h"
 
 #define NbLevels 10
 #define NbRows    5
 #define NbCol    10
-
-extern int8_t level_brick[NbLevels][NbRows * NbCol + 1];
-extern Brick currentLevel[NbRows][NbCol];
 
 class Levels
 {
@@ -26,4 +22,4 @@ public:
     uint8_t checkEndLevel();
     void checkLevelEvent();
 
-}
+};
