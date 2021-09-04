@@ -19,9 +19,9 @@ private:
 
 public:
 
-    uint8_t     x, y;
+    float       x, y;
     uint8_t     radius; 
-    int8_t      moveX, moveY;
+    float       moveX, moveY;
 
     void newBall();
     void moveBall(float dt);

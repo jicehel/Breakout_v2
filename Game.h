@@ -7,7 +7,6 @@ private:
 
     static const uint8_t _NUM_HIGHSCORE = 5;       // Number of highscores to keep
     static const uint8_t _NAME_LENGTH   = 12;      // Lenght of names kept in Highscores
-    static const uint8_t _NUM_LEVEL     = 10;      // Number of created levels
 
     float_t _calculateDeltaTime();
     void    _saveHighScore(unsigned int test_score);
@@ -37,10 +36,18 @@ private:
     
 public:
 
-    static const boolean lightSides = true;
+    boolean   sound, lightSides;
+    uint16_t  score;
+    uint8_t   currentLevelNb, lives;
                
     // initialize game state (load all shaders/textures/levels)
     void init();
+
+    // display informations of the game at top of the screen
+    void showInfos();
+
+    // check if player have a least a life
+    void checkLives();
         
     // game loop
     void loop();

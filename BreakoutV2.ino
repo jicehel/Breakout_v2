@@ -19,6 +19,7 @@ void setup() {
 
 void loop() {
     gb.waitForUpdate();
+    gb.display.clear();
     game.loop();
               SerialUSB.print(ball.radius);
               SerialUSB.print(":");
