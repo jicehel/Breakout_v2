@@ -7,9 +7,10 @@
 #include "Global.h"
 
 // Objects
-Game game;
-Ball ball;
+Game  game;
+Ball  ball;
 // Paddle paddle;
+Brick  brick;
 Levels level;
 
 void setup() {
@@ -20,8 +21,10 @@ void setup() {
 
 void loop() {
     gb.waitForUpdate();
-    gb.display.clear();
     game.loop();
+/*              
+ *            Debug code example   
+ *               
               SerialUSB.print(ball.radius);
               SerialUSB.print(":");
               SerialUSB.print(ball.x);
@@ -31,5 +34,5 @@ void loop() {
               SerialUSB.print(ball.moveX);
               SerialUSB.print(":");
               SerialUSB.print(ball.moveY);
-              SerialUSB.println("");
+              SerialUSB.println(""); */
 }

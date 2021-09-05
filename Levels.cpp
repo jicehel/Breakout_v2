@@ -4,7 +4,7 @@
 //---------------------------------------------------------------------------
 // Data for the levels
 //---------------------------------------------------------------------------
-// COLUMNS: 10   ROW: 5   BRICK: 8 x 4
+// this -> _COLUMNS: 10   ROW: 5   BRICK: 8 x 4
 // Briques
 // 0: absence de brique            11: vie 
 // 1: brique grise incassable      12: taille paddle ++
@@ -19,7 +19,7 @@
 // 10: brique violette             21: balle d'acier (traverse les briques)
 //---------------------------------------------------------------------------
 
-int8_t level_brick[level._NB_LEVEL][level._ROWS * level._COLUMNS + 1] = { 
+int8_t level_brick[Levels::_NUM_LEVEL][Levels::_ROWS * Levels::_COLUMNS + 1] = { 
   
  { 4, 4,  4,  6,  6,  6,  4,  6, 4,  6,
    6, 3,  6,  6,  6,  3,  6,  6, 3,  6,
@@ -84,21 +84,55 @@ int8_t level_brick[level._NB_LEVEL][level._ROWS * level._COLUMNS + 1] = {
     };
 //---------------------------------------------------------------------------
 
+Brick currentLevel[Levels::_ROWS][Levels::_COLUMNS];
+
 void Levels::resetCurrentLevel() {
   this -> brickCount = 0;
   this -> nbBricks = 0;
   this -> nbBonus = 0; 
   this -> defaultBonusBrick = level_brick[game.currentLevelNb-1][50] ;
+      SerialUSB.print(this -> _ROWS);
+      SerialUSB.print(":");
+      SerialUSB.println(_COLUMNS);      
   for (int8_t row = 0; row < this -> _ROWS; row++)
     for (int8_t column = 0; column < this -> _COLUMNS; column++) { 
-      currentLevel[row][column].type_brick = level_brick[game.currentLevelNb-1][row * this -> _COLUMNS + column];
-      if (currentLevel[row][column].type_brick > 1) {
+      currentLevel[row][column].typeBrick = level_brick[game.currentLevelNb-1][row * this -> _COLUMNS + column];
+/*
+      SerialUSB.print();
+      SerialUSB.print(":");
+*/
+      SerialUSB.print(row * this -> _COLUMNS + column);
+      SerialUSB.print(":");
+
+      SerialUSB.print(game.currentLevelNb);
+      SerialUSB.print(":");
+      // SerialUSB.println(currentLevel[row][column].typeBrick);
+      SerialUSB.println(level_brick[game.currentLevelNb-1][row * this -> _COLUMNS + column]);
+      if (currentLevel[row][column].typeBrick > 1) {
          this -> nbBricks++;
          currentLevel[row][column].isHit = false;
-      } else if (currentLevel[row][column].type_brick == 1) {
+      } else if (currentLevel[row][column].typeBrick == 1) {
          currentLevel[row][column].isHit = false;
       } else currentLevel[row][column].isHit = true;
     }
+}
+
+void Levels::drawLevel() {
+  /* SerialUSB.print(this -> _ROWS);
+  SerialUSB.print(":");
+  SerialUSB.println(this -> _COLUMNS); */
+  for (int8_t row = 0; row <this -> _ROWS; row++) {
+    for (int8_t column = 0; column < this -> _COLUMNS; column++) {
+      /* SerialUSB.print(game.currentLevelNb);
+      SerialUSB.print(":");
+      SerialUSB.println(currentLevel[row][column].typeBrick); */
+      if (!(currentLevel[row][column].isHit)) {
+        if (currentLevel[row][column].typeBrick > 0) {
+          brick.drawBrick(currentLevel[row][column].typeBrick, BRICK_WIDTH * column, BRICK_HEIGHT * row + YTOP);
+        }  
+      }  
+    } // -- End for Column
+  } // --End for Row  
 }
 
 uint8_t Levels::checkEndLevel() {
@@ -108,7 +142,7 @@ uint8_t Levels::checkEndLevel() {
 void Levels::checkLevelEvent(){
     uint8_t newLevel = checkEndLevel();
     if (newLevel > 0) {
-      if (newLevel > this ->_NUM_LEVEL) newLevel = 1;
-      resetCurrenlevel();
+      if (newLevel > Levels::_NUM_LEVEL) newLevel = 1;
+      Levels::resetCurrentLevel();
     }
 }

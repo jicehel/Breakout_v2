@@ -15,4 +15,7 @@
 extern Game game;
 extern Ball ball;
 // extern Paddle paddle;
-extern Levels level,
+extern Brick brick;
+extern Levels level;
+
+extern Brick currentLevel[Levels::_ROWS][Levels::_COLUMNS];

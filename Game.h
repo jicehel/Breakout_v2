@@ -11,6 +11,9 @@ private:
     float_t _calculateDeltaTime();
     void    _saveHighScore(unsigned int test_score);
     void    _initHighScore();
+    void    _newGame();
+    void    _pause();
+    void    _showTitlescreen();
 
     
     // Represents the current state of the game
@@ -27,10 +30,12 @@ private:
     // game state
     GameState    _state;  
 
-    float _deltaTime;
-    float _oldTime;
-    int _highscore[_NUM_HIGHSCORE];
-    char _name[_NUM_HIGHSCORE][_NAME_LENGTH+1];
+    float   _deltaTime;
+    float   _oldTime;
+    int     _highscore[_NUM_HIGHSCORE];
+    char    _name[_NUM_HIGHSCORE][_NAME_LENGTH+1];
+    uint8_t _animStartMenu;
+    uint8_t _dirAnimMenu;
 
 
     
@@ -40,16 +45,9 @@ public:
     uint16_t  score;
     uint8_t   currentLevelNb, lives;
                
-    // initialize game state (load all shaders/textures/levels)
     void init();
-
-    // display informations of the game at top of the screen
     void showInfos();
-
-    // check if player have a least a life
     void checkLives();
-        
-    // game loop
     void loop();
     
 };

@@ -21,23 +21,23 @@ const uint16_t b12Data[] = {8,4,1, 1, 0, 0, 0x3761,0x576a,0x5f6a,0x7769,0x6769,0
 Image imageBrique[12] = {Image(b01Data),Image(b02Data),Image(b03Data), Image(b04Data),Image(b05Data), Image(b06Data),Image(b07Data), Image(b08Data), Image(b09Data),Image(b10Data), Image(b11Data), Image(b12Data)};
 
 // Draw the defined brick
-void Brick::draw_brick(int8_t brickType, int8_t xBrique, int8_t yBrique) {
-  if (brickType > 10) brickType = defaultBonusBrick;
+void Brick::drawBrick(int8_t brickType, int8_t xBrique, int8_t yBrique) {
+  if (brickType > 10) brickType = level.defaultBonusBrick;
   if (brickType > 0)  gb.display.drawImage(xBrique, yBrique, imageBrique[brickType - 1]);
 }
 
 void Brick::collision_brick(int8_t r,int8_t c ) {
   //If a collison has occured
-  if (currentLevel[r][c].type_brick > 1) {
+  if (currentLevel[r][c].typeBrick > 1) {
          level.brickCount++;
-         game.score = game.score + nbPointsBrick;
+         game.score = game.score + NB_PTS_BRICK;
          // Manage bonus / malus add
-         /* if (type_brick[r][c] == 11 || type_brick[r][c] == 12 || type_brick[r][c] == 14 || type_brick[r][c] == 20 || type_brick[r][c] == 21 ) {
+         /* if (typeBrick[r][c] == 11 || typeBrick[r][c] == 12 || typeBrick[r][c] == 14 || typeBrick[r][c] == 20 || typeBrick[r][c] == 21 ) {
             (if game.sound) gb.sound.fx(SBonus); 
-            Add_bonus(type_brick[r][c],BrickWidth * c,((r+1)*BrickHeight  + Ytop));
-         } else if (type_brick[r][c] == 13 || type_brick[r][c] == 17 || type_brick[r][c] == 18 || type_brick[r][c] == 19 ) {
+            Add_bonus(typeBrick[r][c],BRICK_WIDTH * c,((r+1)*BRICK_HEIGHT  + Ytop));
+         } else if (typeBrick[r][c] == 13 || typeBrick[r][c] == 17 || typeBrick[r][c] == 18 || typeBrick[r][c] == 19 ) {
             gb.sound.fx(SLostlife); 
-            Add_bonus(18,BrickWidth * c,((r+1)*BrickHeight  + Ytop));
+            Add_bonus(18,BRICK_WIDTH * c,((r+1)*BRICK_HEIGHT  + Ytop));
          } // end if */    
          currentLevel[r][c].isHit = true;
   }
