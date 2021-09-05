@@ -10,7 +10,7 @@
 Game game;
 Ball ball;
 // Paddle paddle;
-Levels level,
+Levels level;
 
 void setup() {
     gb.begin();

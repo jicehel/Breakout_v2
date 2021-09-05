@@ -21,16 +21,16 @@ const uint16_t b12Data[] = {8,4,1, 1, 0, 0, 0x3761,0x576a,0x5f6a,0x7769,0x6769,0
 Image imageBrique[12] = {Image(b01Data),Image(b02Data),Image(b03Data), Image(b04Data),Image(b05Data), Image(b06Data),Image(b07Data), Image(b08Data), Image(b09Data),Image(b10Data), Image(b11Data), Image(b12Data)};
 
 // Draw the defined brick
-void draw_brick(int8_t brickType, int8_t xBrique, int8_t yBrique) {
+void Brick::draw_brick(int8_t brickType, int8_t xBrique, int8_t yBrique) {
   if (brickType > 10) brickType = defaultBonusBrick;
   if (brickType > 0)  gb.display.drawImage(xBrique, yBrique, imageBrique[brickType - 1]);
 }
 
-void collision_brick(int8_t r,int8_t c ) {
+void Brick::collision_brick(int8_t r,int8_t c ) {
   //If a collison has occured
   if (currentLevel[r][c].type_brick > 1) {
          level.brickCount++;
-         game.score = game.score + this -> nbPointsBrick;
+         game.score = game.score + nbPointsBrick;
          // Manage bonus / malus add
          /* if (type_brick[r][c] == 11 || type_brick[r][c] == 12 || type_brick[r][c] == 14 || type_brick[r][c] == 20 || type_brick[r][c] == 21 ) {
             (if game.sound) gb.sound.fx(SBonus); 
