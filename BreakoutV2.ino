@@ -6,12 +6,14 @@
 #include <Gamebuino-Meta.h>
 #include "Global.h"
 
+
 // Objects
 Game  game;
 Ball  ball;
 // Paddle paddle;
 Brick  brick;
 Levels level;
+Paddle paddle;
 
 void setup() {
     gb.begin();

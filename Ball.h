@@ -1,7 +1,6 @@
 #pragma once
 
-extern Image ball2, ball3, ball4, ball5, ball4Metal;
-
+#define MaxXSpeed    0.7
 
 class Ball
 
@@ -9,12 +8,15 @@ class Ball
 
 private:
 
-    // object state
-    
+    static constexpr float _X_SPEED = 8;
+    static constexpr float _Y_SPEED = 0.08;       
+
     Gamebuino_Meta::Color    color;
-    bool        bestroyed;
-    bool        free;
-    bool        metal;
+
+    void _ballMoveFree(float dt);
+    void _ballTestRebound();
+    void _ballTestReachBottom();
+    void _ballFollowPaddle();
 
 
 public:
@@ -22,10 +24,13 @@ public:
     float       x, y;
     uint8_t     radius; 
     float       moveX, moveY;
+    bool        bestroyed;
+    bool        free;
+    bool        metal;
 
-    void newBall();
-    void moveBall(float dt);
-    void drawBall();
+    void ballCreateNew();
+    void ballMove(float dt);
+    void ballDraw();
 
     
 };

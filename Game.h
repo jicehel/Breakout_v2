@@ -13,7 +13,8 @@ private:
     void    _initHighScore();
     void    _newGame();
     void    _pause();
-    void    _showTitlescreen();
+    void    _showTitleScreen();
+    void    _initTitleScreen();
 
     
     // Represents the current state of the game
@@ -23,8 +24,8 @@ private:
             TITLESCREEN,
             RUNNING,
             PAUSE,
-            GAMEOVER
-            
+            GAMEOVER,
+            RESTART
     };
 
     // game state

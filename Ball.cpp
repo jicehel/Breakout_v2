@@ -1,44 +1,48 @@
 #include <Gamebuino-Meta.h>
-
 #include "Global.h"
 
 // Ball images
     
-uint16_t ball2Data[] = {2,2,1, 1, 0, 0, 0xffff,0xfb40,0xfb40,0x7980};
+const uint16_t ball2Data[] = {2,2,1, 1, 0, 0, 0xffff,0xfb40,0xfb40,0x7980};
 Image ball2 = Image(ball2Data);
-uint16_t ball3Data[] = {3,3,1, 1, 0, 0, 0xffff,0xffff,0xfb40,0xffff,0xfec0,0x7980,0xfb40,0x7980,0x7980};
+const uint16_t ball3Data[] = {3,3,1, 1, 0, 0, 0xffff,0xffff,0xfb40,0xffff,0xfec0,0x7980,0xfb40,0x7980,0x7980};
 Image ball3 = Image(ball3Data);
-uint16_t ball4Data[] = {4,4,1, 1, 0xf80d, 0, 0xf80d,0xffff,0xfb40,0xf80d,0xffff,0xfec0,0xfec0,0x7980,0xfb40,0xfec0,0xfb40,0x7980,0xf80d,0x7980,0x7980,0xf80d};
+const uint16_t ball4Data[] = {4,4,1, 1, 0xf80d, 0, 0xf80d,0xffff,0xfb40,0xf80d,0xffff,0xfec0,0xfec0,0x7980,0xfb40,0xfec0,0xfb40,0x7980,0xf80d,0x7980,0x7980,0xf80d};
 Image ball4 = Image(ball4Data);
-uint16_t ball5Data[] = {5,5,1, 1, 0xf80d, 0, 0xf80d,0xfec0,0xffff,0x7800,0xf80d,0xfec0,0xffff,0xffff,0xfec0,0x7800,0xfec0,0xffff,0xfec0,0xfb40,0x7800,0x7800,0xfec0,0xfb40,0x7980,0x7800,0xf80d,0x7800,0x7800,0x7800,0xf80d};
+const uint16_t ball5Data[] = {5,5,1, 1, 0xf80d, 0, 0xf80d,0xfec0,0xffff,0x7800,0xf80d,0xfec0,0xffff,0xffff,0xfec0,0x7800,0xfec0,0xffff,0xfec0,0xfb40,0x7800,0x7800,0xfec0,0xfb40,0x7980,0x7800,0xf80d,0x7800,0x7800,0x7800,0xf80d};
 Image ball5 = Image(ball5Data);
-uint16_t ball4MetalData[] = {4,4,1, 1, 0xf80d, 0, 0xf80d,0xc618,0xad75,0xf80d,0xc618,0xef7d,0xdefb,0x3186,0xad75,0xdefb,0x630c,0x3186,0xf80d,0x3186,0x3186,0xf80d};
+const uint16_t ball4MetalData[] = {4,4,1, 1, 0xf80d, 0, 0xf80d,0xc618,0xad75,0xf80d,0xc618,0xef7d,0xdefb,0x3186,0xad75,0xdefb,0x630c,0x3186,0xf80d,0x3186,0x3186,0xf80d};
 Image ball4Metal = Image(ball4MetalData);
     
 
-void Ball::newBall (){
-  // this -> free = false;
+void Ball::ballCreateNew (){
+  this -> free = false;
+  // this -> free = true;
   this -> metal = false;
   this -> radius = 2;
-  // y = paddle.py - balle.BSize;
-  this -> y = HEIGHT /2 - this -> radius;
-  // balle.x = paddle.px + midPaddle ;
-  this -> x = WIDTH / 2 - this -> radius;
-
-  // to test
-  this -> free = true;
-  this -> moveX  = 0.08;
-  this -> moveY  = -0.08;
+  this -> y = paddle.y - 2 * this -> radius;
+  this -> x = paddle.x + paddle.pWidth / 2 - ball.radius ;
   this -> color  = YELLOW;
+  
+  // value to make tests
+  // this -> moveX  = 0.08;
+  // this -> moveY  = -0.08;
+  
+}
+
+void Ball::ballMove(float dt) {
+    if (this -> free) {
+      Ball::_ballMoveFree(dt);
+      Ball::_ballTestRebound();
+      Ball::_ballTestReachBottom();
+    } else {
+      Ball::_ballFollowPaddle();
+    }
+    if (game.lightSides) gb.lights.fill(BLACK);   
 }
 
 
-void Ball::moveBall(float dt) {
-  // SerialUSB.println("Do Ball");
-  if (this -> free) {
-    //Move ball
-    this -> x += this -> moveX * dt;
-    this -> y += this -> moveY * dt;
+void Ball::_ballTestRebound() {
     //Bounce off top edge
     if (this -> y <= YTOP) {
       this -> y = YTOP;
@@ -47,21 +51,7 @@ void Ball::moveBall(float dt) {
       if (game.lightSides) { gb.lights.drawPixel(0, 0, YELLOW);gb.lights.drawPixel(1, 0, YELLOW); }
       delay(15);
     }
-  }
-    /* 
-    //Lose a life if bottom edge hit
-    if (y > paddle.py - radius + 0.5*paddle.pheight) {
-      // gb.sound.play("LoseALife.wav");
-      gb.lights.fill(RED);
-      gb.sound.fx(LoseLife);
-      delay(300);
-      balle.y = paddle.py - balle.BSize;
-      balle.Free = false;
-      lives = lives - 1;
-      Nb_bonus = 0;
-      metal = false;
-      glue =false;
-    } */
+    
     //Bounce off left side
     if (this -> x < 1) {
       this -> x = 1;
@@ -70,6 +60,7 @@ void Ball::moveBall(float dt) {
       if (game.lightSides) { gb.lights.drawPixel(0, 0, YELLOW);gb.lights.drawPixel(0, 1, YELLOW);gb.lights.drawPixel(0, 2, YELLOW);gb.lights.drawPixel(0, 3, YELLOW); }
       delay(15);
     }
+    
     //Bounce off right side
     if (this -> x > (WIDTH - 2 * this -> radius)) {
       this -> x = WIDTH - 2 * this -> radius;
@@ -78,55 +69,65 @@ void Ball::moveBall(float dt) {
       if (game.lightSides) { gb.lights.drawPixel(1, 0, YELLOW);gb.lights.drawPixel(1, 1, YELLOW);gb.lights.drawPixel(1, 2, YELLOW);gb.lights.drawPixel(1, 3, YELLOW); }
       delay(15);
     }
-
-    if ((this -> y + 2* this -> radius) >= HEIGHT) {
-      this -> y = HEIGHT - 2 * this -> radius;
-      this -> moveY = - (this -> moveY);
-      if (game.sound) gb.sound.tone(523, 200);
-      delay(15); 
-    }
-
-    //Reset Bounce
-    /*     
-      //Bounce off paddle
-      
-      if (((balle.x + balle.BSize) >= paddle.px) && (balle.x <= paddle.px + paddle.pwidth) && ((balle.y + balle.BSize) >= paddle.py) && (balle.y <= paddle.py + paddle.pheight)) {
-      if (glue==false) {
-        if (balle.moveY > 0) {
-          balle.moveY = -balle.moveY;
-          balle.moveX = balle.moveX  - (paddle.px + midPaddle - balle.x + random(-1, 1)) / 4; //Applies spin on the ball
+    
+    //Bounce on paddle  
+    if (((this -> x + 2 * this -> radius) >= paddle.x) && (this -> x <= paddle.x + paddle.pWidth) && ((this -> y + 2 * this -> radius) >= paddle.y) && (this -> y <= paddle.y + paddle.pHeight)) {
+      if (paddle.glue==false) {
+        if (this -> moveY > 0) {
+          this -> moveY = -this -> moveY;
+          this -> moveX = this -> moveX  - (paddle.x + paddle.pWidth / 2 - ball.radius - this -> x + random(-_X_SPEED, _X_SPEED)) / 200; //Applies spin on the ball
         }
         //limit horizontal speed
-        if (balle.moveX < -MaxXSpeed) balle.moveX = -MaxXSpeed;
-        if (balle.moveX > MaxXSpeed)  balle.moveX =  MaxXSpeed;
-        gb.sound.tone(200, 200);
-        if (LightSides) { gb.lights.drawPixel(0, 3, YELLOW);gb.lights.drawPixel(1, 3, YELLOW); }
+        if (this -> moveX < -MaxXSpeed)  this -> moveX = -MaxXSpeed;
+        if (this -> moveX >  MaxXSpeed)  this -> moveX =  MaxXSpeed;
+        if (game.sound) gb.sound.tone(200, 200);
+        if (game.lightSides) { gb.lights.drawPixel(0, 3, YELLOW);gb.lights.drawPixel(1, 3, YELLOW); }
         delay(2);
-      } else balle.Free = false;  
-    } // end bounce off paddle
-
-    bounced = false;
-  } // End of Ball free
-    else {
-    //Ball follows paddle (not free) 
-    balle.x = paddle.px + midPaddle ;
-    balle.y = paddle.py - balle.BSize;
-    //Release ball if FIRE pressed
-    if (gb.buttons.pressed(BUTTON_A)) {
-      balle.Free = true;
-      if (Nb_glue > 0) Nb_glue--;
-      if (Nb_glue <= 0) glue = false;
-      if (gb.buttons.pressed(BUTTON_LEFT) || gb.buttons.pressed(BUTTON_RIGHT)) {
-        if (gb.buttons.pressed(BUTTON_LEFT)) balle.moveX = 0.5;
-        else balle.moveX = -0.5;
-      } else balle.moveX = random(-1, 1) / 2;
-      balle.moveY = -1;
-    } 
-  } */    
-  if (game.lightSides) gb.lights.fill(BLACK);   
+      } else this -> free = false;  
+   }
 }
 
-void Ball::drawBall() {
+void Ball::_ballTestReachBottom() {
+  //Lose a life if bottom edge hit
+  if (this -> y > paddle.y - this -> radius + 0.5 * paddle.pHeight) {
+      // gb.sound.play("LoseALife.wav");
+      if (game.lightSides)gb.lights.fill(RED);
+      // if (game.sound) gb.sound.fx(LoseLife);
+      delay(300);
+      this -> y = paddle.y - 2 * this -> radius;
+      this -> free = false;
+      game.lives = game.lives - 1;
+      level.levelNbBonus = 0;
+      this -> metal = false;
+      paddle.glue =false;
+    } 
+}
+
+
+void Ball::_ballMoveFree(float dt) {
+    this -> x += this -> moveX * dt;
+    this -> y += this -> moveY * dt;
+}
+    
+ 
+void Ball::_ballFollowPaddle() {
+    this -> x = paddle.x + (paddle.pWidth - 2*ball.radius)/2 ;
+    this -> y = paddle.y - 2 * this -> radius;
+    //Release ball if FIRE pressed
+    if (gb.buttons.pressed(BUTTON_A)) {
+      this -> free = true;
+      if (paddle.nbGlue > 0) paddle.nbGlue--;
+      if (paddle.nbGlue <= 0) paddle.glue = false;
+      // if (gb.buttons.pressed(BUTTON_LEFT) || gb.buttons.pressed(BUTTON_RIGHT)) {
+        // if (gb.buttons.pressed(BUTTON_LEFT)) this -> moveX = 0.5;
+        // else this -> moveX = -0.5;
+      // } else this -> moveX = random(-1, 1) / 2;
+      this -> moveX = (random(2 * this ->_X_SPEED)- this ->_X_SPEED) / 200;
+      this -> moveY = -_Y_SPEED;
+    }     
+}
+
+void Ball::ballDraw() {
   gb.display.setColor(this -> color);
   if (!(this -> metal)) { 
       switch (this -> radius) {

@@ -8,19 +8,22 @@ const uint16_t barreData[] = {80,12,1, 1, 0, 0, 0xffff,0xffff,0xffff,0xc617,0xc6
 Image barre = Image(barreData);
 
 void Game::init() {
-    this -> _state   = this -> GameState::TITLESCREEN;
     this -> _oldTime = 0;
     this -> lightSides = false;
-    this -> sound = false;
-    if (this -> sound) {
-        gb.sound.tone(987, 160);
-        delay(160);
-        gb.sound.tone(1318, 400);
-    }
-    this -> _animStartMenu = 3; 
-    this -> _dirAnimMenu = -1;
     Game::_initHighScore();
-    gb.display.clear();
+    Game::_initTitleScreen();
+}
+
+void Game::_initTitleScreen(){
+      this -> _state   = this -> GameState::TITLESCREEN;
+      if (this -> sound) {
+          gb.sound.tone(987, 160);
+          delay(160);
+          gb.sound.tone(1318, 400);
+      }
+      this -> _animStartMenu = 3; 
+      this -> _dirAnimMenu = -1;
+      gb.display.clear();  
 }
 
 
@@ -28,8 +31,9 @@ void Game::_newGame() {
       this -> currentLevelNb  = 1;
       this -> lives = 3;
       this -> score = 0; 
-      ball.newBall();
-      level.resetCurrentLevel();
+      ball.ballCreateNew();
+      level.levelReset();
+      paddle.paddleReset();
       this -> _state = GameState::RUNNING; 
 }
 
@@ -103,7 +107,7 @@ void Game::_saveHighScore(unsigned int test_score) {
 }
 
 
-void Game::_showTitlescreen() {
+void Game::_showTitleScreen() {
         gb.display.drawImage(0, 0, startScreen);
         this -> _animStartMenu = this -> _animStartMenu + this -> _dirAnimMenu * 0.10;
         if (this -> _animStartMenu < -0.25) this -> _dirAnimMenu = 1;
@@ -115,11 +119,17 @@ void Game::_showTitlescreen() {
 }
 
 void Game::_pause() {
-        gb.display.setCursor(17, 30);
+        gb.display.setCursor(17, 35);
         gb.display.setFontSize(2);
         gb.display.setColor(RED);
         gb.display.print("PAUSE");
-        if (gb.buttons.pressed(BUTTON_A))  this -> GameState::RUNNING;
+        gb.display.setCursor(10, 50);
+        gb.display.setColor(ORANGE);
+        gb.display.setFontSize(1);
+        gb.display.print("Appuyez sur (A)");
+        gb.display.setCursor(11, 58);
+        gb.display.print("pour reprendre");
+        if (gb.buttons.pressed(BUTTON_A))  this -> _state   = this -> GameState::RUNNING;
 }
 
 
@@ -131,16 +141,23 @@ void Game::loop() {
     switch (_state) {
       
       case GameState::TITLESCREEN:
-          Game::_showTitlescreen();
+          Game::_showTitleScreen();
       break;
 
       case GameState::RUNNING:
-          ball.moveBall(_deltaTime);
+          // Calculate
+          ball.ballMove(_deltaTime);
+          paddle.paddleMove();
+          Game::checkLives();
+
+          // show
           gb.display.clear();
           gb.display.drawImage(0,0,barre);
-          level.drawLevel();
-          ball.drawBall();
+          level.levelDraw();
+          ball.ballDraw();
+          paddle.paddleDraw();
           game.showInfos();
+          if (gb.buttons.pressed(BUTTON_MENU) )  this -> _state   = this -> GameState::PAUSE;
       break;
 
       case GameState::PAUSE:
@@ -148,6 +165,12 @@ void Game::loop() {
       break;
 
       case GameState::GAMEOVER:
+          Game::_saveHighScore(score);
+          this -> _state   = this -> GameState::RESTART;
+      break;
+
+      case GameState::RESTART:    
+          Game::_initTitleScreen();
       break;
       
     }

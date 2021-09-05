@@ -18,11 +18,11 @@ public:
     static const uint8_t _NUM_LEVEL = NB_LEVELS;     // Number of created levels
 
     Brick currentLevel[Levels::_ROWS][Levels::_COLUMNS];
-    uint8_t brickCount, nbBricks, nbBonus, defaultBonusBrick;
+    uint8_t levelBrickCount, levelNbBricks, levelNbBonus, levelDefaultBonusBrick;
 
-    void resetCurrentLevel();
-    uint8_t checkEndLevel();
-    void checkLevelEvent();
-    void drawLevel();
+    void    levelReset();
+    uint8_t levelCheckEnd();
+    void    levelCheckEvent();
+    void    levelDraw();
 
 };

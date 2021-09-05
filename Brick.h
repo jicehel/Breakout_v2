@@ -18,6 +18,6 @@ public:
   bool    isHit;
   uint8_t x1,y1,x2,y2;
 
-  void drawBrick(int8_t brickType, int8_t xBrique, int8_t yBrique);
-  void collision_brick(int8_t r,int8_t c );
+  void brickDraw(int8_t brickType, int8_t xBrique, int8_t yBrique);
+  void brickCollisionDetected(int8_t r,int8_t c );
 };
