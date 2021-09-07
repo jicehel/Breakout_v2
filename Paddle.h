@@ -9,15 +9,17 @@ private:
 
     static const uint8_t     _paddleDefaulSize = 16;
     static const uint8_t     _yPaddle    =       62;
-    static const uint8_t     _paddlewidthmin =   4;
-    static const uint8_t     _paddlewidthmax =   30;
+
 
 
 public:
 
+    static const uint8_t     paddleWidthMin =   4;
+    static const uint8_t     paddleWidthMax =   30;
+
     int8_t      x;
     uint8_t     y;
-    uint8_t     pWidth, pHeight;
+    uint8_t     sizeX, sizeY;
     int8_t      pSpeed;
     uint8_t     nbGlue;
     boolean     glue;

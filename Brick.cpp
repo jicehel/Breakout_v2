@@ -20,25 +20,66 @@ const uint16_t b11Data[] = {8,4,1, 1, 0, 0, 0xa1a6,0xfcd1,0xfc91,0xfc11,0xfc30,0
 const uint16_t b12Data[] = {8,4,1, 1, 0, 0, 0x3761,0x576a,0x5f6a,0x7769,0x6769,0x7769,0xa772,0xef7d,0x1c80,0x2760,0x3f60,0x3f60,0x3760,0x3761,0x7769,0xa772,0xaa0,0x1d20,0x2760,0x3f60,0x3f60,0x3760,0x3761,0x7769,0x960,0x960,0xaa0,0x1320,0x1400,0x1c80,0x1d20,0x3761};
 Image imageBrique[12] = {Image(b01Data),Image(b02Data),Image(b03Data), Image(b04Data),Image(b05Data), Image(b06Data),Image(b07Data), Image(b08Data), Image(b09Data),Image(b10Data), Image(b11Data), Image(b12Data)};
 
+
 // Draw the defined brick
 void Brick::brickDraw(int8_t brickType, int8_t xBrique, int8_t yBrique) {
   if (brickType > 10) brickType = level.levelDefaultBonusBrick;
   if (brickType > 0)  gb.display.drawImage(xBrique, yBrique, imageBrique[brickType - 1]);
 }
 
+
 void Brick::brickCollisionDetected(int8_t r,int8_t c ) {
   //If a collison has occured
+  SerialUSB.print("r: ");
+  SerialUSB.print(r);
+  SerialUSB.print("  c: ");
+  SerialUSB.print(c);
+  SerialUSB.print("  typeBrick: ");
+  SerialUSB.println(currentLevel[r][c].typeBrick);
   if (currentLevel[r][c].typeBrick > 1) {
-         level.levelBrickCount++;
-         game.score = game.score + NB_PTS_BRICK;
+         SerialUSB.println("collision detected");
          // Manage bonus / malus add
-         /* if (typeBrick[r][c] == 11 || typeBrick[r][c] == 12 || typeBrick[r][c] == 14 || typeBrick[r][c] == 20 || typeBrick[r][c] == 21 ) {
-            (if game.sound) gb.sound.fx(SBonus); 
-            Add_bonus(typeBrick[r][c],BRICK_WIDTH * c,((r+1)*BRICK_HEIGHT  + Ytop));
-         } else if (typeBrick[r][c] == 13 || typeBrick[r][c] == 17 || typeBrick[r][c] == 18 || typeBrick[r][c] == 19 ) {
-            gb.sound.fx(SLostlife); 
-            Add_bonus(18,BRICK_WIDTH * c,((r+1)*BRICK_HEIGHT  + Ytop));
-         } // end if */    
-         currentLevel[r][c].isHit = true;
+         if (currentLevel[r][c].typeBrick == 11 || currentLevel[r][c].typeBrick == 12 || currentLevel[r][c].typeBrick == 14 || currentLevel[r][c].typeBrick == 20 || currentLevel[r][c].typeBrick == 21 ) {
+            if (game.sound) gb.sound.fx(SBonus); 
+            bonus[0].bonusAdd(currentLevel[r][c].typeBrick,sizeX * c,((r+1)*sizeY  + YTOP));
+            currentLevel[r][c].typeBrick = 0;
+            currentLevel[r][c].isHit = true;
+            level.levelBrickCount++;
+         } else if (currentLevel[r][c].typeBrick == 13 || currentLevel[r][c].typeBrick == 17 || currentLevel[r][c].typeBrick == 18 || currentLevel[r][c].typeBrick == 19 ) {
+            if (game.sound)gb.sound.fx(SLostlife); 
+            bonus[0].bonusAdd(18,sizeX * c,((r+1)*sizeY  + YTOP));
+            currentLevel[r][c].typeBrick = 0;
+            currentLevel[r][c].isHit = true;
+            level.levelBrickCount++;
+         } else if ( currentLevel[r][c].typeBrick > 2) {
+            currentLevel[r][c].typeBrick--;
+         } else {
+            currentLevel[r][c].typeBrick = 0;
+            level.levelBrickCount++;
+            game.score = game.score + NB_PTS_BRICK;
+            currentLevel[r][c].isHit = true;
+         }    
+  }
+}
+
+void Brick::bounceY(int8_t r,int8_t c, bool bounced) {
+  //Only bounce once each ball move
+  
+  if (!bounced) {
+    ball.moveY = - ball.moveY; // + random(-(_Y_SPEED), _Y_SPEED)) / 600;
+    ball.y += ball.moveY;
+    if (game.sound)gb.sound.tone(261, 200);
+    delay(5);
+  }
+}
+
+void Brick::bounceX(int8_t r,int8_t c, bool bounced) {
+  //Only bounce once each ball move
+  
+  if (!bounced) {
+    ball.moveX = - ball.moveX; // + random(-(_X_SPEED), _X_SPEED)) / 600;
+    ball.x += ball.moveX;
+    if (game.sound)gb.sound.tone(261, 200);
+    delay(5);
   }
 }

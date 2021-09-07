@@ -15,6 +15,9 @@ private:
     void    _pause();
     void    _showTitleScreen();
     void    _initTitleScreen();
+    void    _checkLives();
+    void    _checkBrickCollision();
+    bool    _checkCollision(int8_t obj1_x, int8_t obj1_y,uint8_t obj1_sizeX,uint8_t obj1_sizeY,int8_t obj2_x, int8_t obj2_y,uint8_t obj2_sizeX,uint8_t obj2_sizeY );
 
     
     // Represents the current state of the game
@@ -44,11 +47,11 @@ public:
 
     boolean   sound, lightSides;
     uint16_t  score;
-    uint8_t   currentLevelNb, lives;
+    uint8_t   currentLevelNb, bonusNb, lives;
                
     void init();
     void showInfos();
-    void checkLives();
+
     void loop();
     
 };

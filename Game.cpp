@@ -10,8 +10,9 @@ Image barre = Image(barreData);
 void Game::init() {
     this -> _oldTime = 0;
     this -> lightSides = false;
-    Game::_initHighScore();
-    Game::_initTitleScreen();
+    this -> sound = true;
+    this ->_initHighScore();
+    this ->_initTitleScreen();
 }
 
 void Game::_initTitleScreen(){
@@ -47,7 +48,7 @@ float_t Game::_calculateDeltaTime(){
 }
 
 
-void Game::checkLives() {
+void Game::_checkLives() {
     if (this -> lives <= 0) {
     delay(500);
     this -> _state   = this -> GameState::GAMEOVER;
@@ -112,11 +113,80 @@ void Game::_showTitleScreen() {
         this -> _animStartMenu = this -> _animStartMenu + this -> _dirAnimMenu * 0.10;
         if (this -> _animStartMenu < -0.25) this -> _dirAnimMenu = 1;
         if (this -> _animStartMenu > 3.25)  this -> _dirAnimMenu = -1; 
-        gb.lights.drawPixel(0, this -> _animStartMenu, YELLOW);gb.lights.drawPixel(1, this -> _animStartMenu, YELLOW);
+        gb.lights.drawPixel(0, this -> _animStartMenu, DARKBLUE);gb.lights.drawPixel(1, this -> _animStartMenu, BROWN);
         delay(15);
         gb.lights.fill(BLACK);
-        if (gb.buttons.pressed(BUTTON_A) || gb.buttons.pressed(BUTTON_B)) Game::_newGame();
+        if (gb.buttons.pressed(BUTTON_A) || gb.buttons.pressed(BUTTON_B)) this ->_newGame();
 }
+
+
+void Game::_checkBrickCollision() {
+    int8_t  ballLeft   =  ball.x;
+    int8_t  ballRight  =  ball.x + ball.sizeX;
+    int8_t  ballTop    =  ball.y;
+    int8_t  ballBottom =  ball.y + ball.sizeY;
+
+    uint8_t brickLeft, brickRight, brickTop, brickBottom;
+
+    boolean bounced = false;
+
+    for (int8_t row = 0; row < NB_ROWS; row++) {
+       for (int8_t column = 0; column < NB_COLUMNS; column++) {  
+          if (!(currentLevel[row][column].isHit)) {
+              // SerialUSB.println("isHit false");
+              //Sets Brick bounds
+              int8_t brickLeft   =   brick.sizeX * column;
+              int8_t brickRight  =   brick.sizeX * ( column + 1 );
+              int8_t brickTop    =   brick.sizeY * row + YTOP;
+              int8_t brickBottom =   brick.sizeY * ( row + 1) + YTOP;
+            
+              if (this -> _checkCollision(ballLeft, ballTop, ball.sizeX, ball.sizeY,brickLeft,brickTop,brick.sizeX,brick.sizeY)) {
+                  
+                  brick.brickCollisionDetected( row, column ); 
+
+                  SerialUSB.print("collision detected - row: ");
+                  SerialUSB.print(row);
+                  SerialUSB.print("  column: ");
+                  SerialUSB.print(column);
+                  SerialUSB.print("  ballLeft: ");
+                  SerialUSB.print(ballLeft);
+                  SerialUSB.print("  ballTop: ");
+                  SerialUSB.print(ballTop);
+                  SerialUSB.print("  brickLeft: ");
+                  SerialUSB.print(brickLeft);
+                  SerialUSB.print("  brickTop: ");
+                  SerialUSB.print(brickTop);
+                  SerialUSB.println("");
+              
+              if (ballBottom > brickBottom || ballTop   < brickTop  ) {
+                  SerialUSB.print("vertical");
+                  brick.bounceY(row,column, bounced);  // Check Vertical collision 
+                  bounced = true;
+              }
+              if (ballLeft   < brickLeft   || ballRight > brickRight) {                  
+                  SerialUSB.print("horizontal");
+                  brick.bounceX(row,column, bounced);  // Check Horizontal collision
+                  bounced = true;
+              }
+            }
+          }
+       }
+    }
+    bounced = false;
+}
+
+// AABB - AABB collision test
+bool Game::_checkCollision(int8_t obj1_x, int8_t obj1_y,uint8_t obj1_sizeX,uint8_t obj1_sizeY,int8_t obj2_x, int8_t obj2_y,uint8_t obj2_sizeX,uint8_t obj2_sizeY ) {                 
+    // collision x-axis?
+    bool collisionX = obj1_x + obj1_sizeX >= obj2_x &&
+        obj2_x + obj2_sizeX >= obj1_x;
+    // collision y-axis?
+    bool collisionY = obj1_y + obj1_sizeY >= obj2_y &&
+        obj2_y + obj2_sizeY >= obj1_y;
+    // collision only if on both axes
+    return collisionX && collisionY;
+} 
+
 
 void Game::_pause() {
         gb.display.setCursor(17, 35);
@@ -141,14 +211,15 @@ void Game::loop() {
     switch (_state) {
       
       case GameState::TITLESCREEN:
-          Game::_showTitleScreen();
+          this -> _showTitleScreen();
       break;
 
       case GameState::RUNNING:
           // Calculate
           ball.ballMove(_deltaTime);
           paddle.paddleMove();
-          Game::checkLives();
+          this -> _checkLives();
+          if (ball.free) this -> _checkBrickCollision();
 
           // show
           gb.display.clear();
@@ -161,16 +232,16 @@ void Game::loop() {
       break;
 
       case GameState::PAUSE:
-          Game::_pause();
+          this -> _pause();
       break;
 
       case GameState::GAMEOVER:
-          Game::_saveHighScore(score);
+          this -> _saveHighScore(score);
           this -> _state   = this -> GameState::RESTART;
       break;
 
       case GameState::RESTART:    
-          Game::_initTitleScreen();
+          this -> _initTitleScreen();
       break;
       
     }

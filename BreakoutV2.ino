@@ -14,6 +14,7 @@ Ball  ball;
 Brick  brick;
 Levels level;
 Paddle paddle;
+Bonus bonus[20];
 
 void setup() {
     gb.begin();

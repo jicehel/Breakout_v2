@@ -21,5 +21,6 @@ extern Ball ball;
 extern Brick brick;
 extern Levels level;
 extern Paddle paddle;
+extern Bonus bonus[20];
 
 extern Brick currentLevel[Levels::_ROWS][Levels::_COLUMNS];

@@ -21,8 +21,12 @@ private:
 
 public:
 
+    static constexpr uint8_t ballSizeMini = 1;
+    static constexpr uint8_t ballSizeMaxi = 2;    
+
     float       x, y;
     uint8_t     radius; 
+    uint8_t     sizeX, sizeY;
     float       moveX, moveY;
     bool        bestroyed;
     bool        free;
