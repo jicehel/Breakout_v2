@@ -7,7 +7,7 @@ class Paddle
 
 private:
 
-    static const uint8_t     _paddleDefaulSize = 16;
+    static const uint8_t     _paddleDefaulSize = 18;
     static const uint8_t     _yPaddle    =       62;
 
 

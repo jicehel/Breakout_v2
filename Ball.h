@@ -1,6 +1,6 @@
 #pragma once
 
-#define MaxXSpeed    0.7
+#define MaxXSpeed    0.5
 
 class Ball
 
@@ -8,8 +8,8 @@ class Ball
 
 private:
 
-    static constexpr float _X_SPEED = 8;
-    static constexpr float _Y_SPEED = 0.08;       
+    static constexpr float _X_SPEED = 6;
+    static constexpr float _Y_SPEED = 0.06;       
 
     Gamebuino_Meta::Color    color;
 

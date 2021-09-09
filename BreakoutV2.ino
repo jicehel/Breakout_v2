@@ -18,7 +18,7 @@ Bonus bonus[20];
 
 void setup() {
     gb.begin();
-    gb.setFrameRate(60);
+    gb.setFrameRate(50);
     game.init();
 }
 

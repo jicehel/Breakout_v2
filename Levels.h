@@ -17,7 +17,6 @@ public:
     static const uint8_t _ROWS      = NB_ROWS;       // Rows of bricks
     static const uint8_t _NUM_LEVEL = NB_LEVELS;     // Number of created levels
 
-    Brick currentLevel[Levels::_ROWS][Levels::_COLUMNS];
     uint8_t levelBrickCount, levelNbBricks, levelDefaultBonusBrick;
 
     void    levelReset();

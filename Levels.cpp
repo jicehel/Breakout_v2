@@ -93,7 +93,8 @@ void Levels::levelReset() {
   this -> levelNbBricks = 0;
   game.bonusNb = 0; 
   this -> levelDefaultBonusBrick = levelBricksData[game.currentLevelNb-1][50] ;
-  for (int8_t row = 0; row < this -> _ROWS; row++)
+
+  for (int8_t row = 0; row < this -> _ROWS; row++) {
     for (int8_t column = 0; column < this -> _COLUMNS; column++) { 
       currentLevel[row][column].typeBrick = levelBricksData[game.currentLevelNb-1][row * this -> _COLUMNS + column];
       if (currentLevel[row][column].typeBrick > 1) {
@@ -103,13 +104,12 @@ void Levels::levelReset() {
          currentLevel[row][column].isHit = false;
       } else currentLevel[row][column].isHit = true;
     }
+  }
+
 }
 
 
 void Levels::levelDraw() {
-  /* SerialUSB.print(this -> _ROWS);
-  SerialUSB.print(":");
-  SerialUSB.println(this -> _COLUMNS); */
   for (int8_t row = 0; row <this -> _ROWS; row++) {
     for (int8_t column = 0; column < this -> _COLUMNS; column++) {
       if (!(currentLevel[row][column].isHit)) {
@@ -118,19 +118,26 @@ void Levels::levelDraw() {
         }  
       }  
     } // -- End for Column
-  } // --End for Row  
+  } // --End for Row 
 }
 
 
 uint8_t Levels::levelCheckEnd() {
-    if (this -> levelBrickCount >= this -> levelNbBricks)  return (game.currentLevelNb + 1);
+    SerialUSB.print("levelBrickCount: ");
+    SerialUSB.print(this -> levelBrickCount);
+    SerialUSB.print("levelNbBricks: ");
+    SerialUSB.println(this -> levelNbBricks);
+    if (this -> levelBrickCount >= this -> levelNbBricks)  { return (game.currentLevelNb + 1); }
 }
 
 
 void Levels::levelCheckEvent(){
-    uint8_t newLevel = levelCheckEnd();
+    uint8_t newLevel = 0;
+    newLevel = this -> levelCheckEnd();
+    SerialUSB.println(newLevel);
     if (newLevel > 0) {
       if (newLevel > Levels::_NUM_LEVEL) newLevel = 1;
+      SerialUSB.println("reset");
       this ->levelReset();
     }
 }

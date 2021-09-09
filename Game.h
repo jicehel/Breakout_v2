@@ -17,6 +17,8 @@ private:
     void    _initTitleScreen();
     void    _checkLives();
     void    _checkBrickCollision();
+    void    _showControls();
+    void    _showOptions();
     bool    _checkCollision(int8_t obj1_x, int8_t obj1_y,uint8_t obj1_sizeX,uint8_t obj1_sizeY,int8_t obj2_x, int8_t obj2_y,uint8_t obj2_sizeX,uint8_t obj2_sizeY );
 
     
@@ -26,6 +28,11 @@ private:
             
             TITLESCREEN,
             RUNNING,
+            SHOW_CONTROLS,
+            SHOW_MORE_OPTIONS,
+            SHOW_SCORES,
+            SHOW_CREDITS,
+            SHOW_OPTIONS,
             PAUSE,
             GAMEOVER,
             RESTART
@@ -40,6 +47,10 @@ private:
     char    _name[_NUM_HIGHSCORE][_NAME_LENGTH+1];
     uint8_t _animStartMenu;
     uint8_t _dirAnimMenu;
+    bool    _initOptions;
+    uint8_t _currentSelectedOption;
+    float   _frameCount;
+    float   _frameStart;
 
 
     

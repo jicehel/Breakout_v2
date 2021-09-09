@@ -30,14 +30,8 @@ void Brick::brickDraw(int8_t brickType, int8_t xBrique, int8_t yBrique) {
 
 void Brick::brickCollisionDetected(int8_t r,int8_t c ) {
   //If a collison has occured
-  SerialUSB.print("r: ");
-  SerialUSB.print(r);
-  SerialUSB.print("  c: ");
-  SerialUSB.print(c);
-  SerialUSB.print("  typeBrick: ");
-  SerialUSB.println(currentLevel[r][c].typeBrick);
+
   if (currentLevel[r][c].typeBrick > 1) {
-         SerialUSB.println("collision detected");
          // Manage bonus / malus add
          if (currentLevel[r][c].typeBrick == 11 || currentLevel[r][c].typeBrick == 12 || currentLevel[r][c].typeBrick == 14 || currentLevel[r][c].typeBrick == 20 || currentLevel[r][c].typeBrick == 21 ) {
             if (game.sound) gb.sound.fx(SBonus); 

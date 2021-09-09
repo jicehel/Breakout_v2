@@ -71,7 +71,7 @@ void Ball::_ballTestRebound() {
       if (paddle.glue==false) {
         if (this -> moveY > 0) {
           this -> moveY = -this -> moveY;
-          this -> moveX = this -> moveX  - (paddle.x + paddle.sizeX / 2 - ball.radius - this -> x + random(-_X_SPEED, _X_SPEED)) / 200; //Applies spin on the ball
+          this -> moveX = this -> moveX  - (paddle.x + paddle.sizeX / 2 - ball.radius - this -> x + random(-_X_SPEED, _X_SPEED)) / 400; //Applies spin on the ball
         }
         //limit horizontal speed
         if (this -> moveX < -MaxXSpeed)  this -> moveX = -MaxXSpeed;
@@ -114,12 +114,9 @@ void Ball::_ballFollowPaddle() {
       this -> free = true;
       if (paddle.nbGlue > 0) paddle.nbGlue--;
       if (paddle.nbGlue <= 0) paddle.glue = false;
-      // if (gb.buttons.pressed(BUTTON_LEFT) || gb.buttons.pressed(BUTTON_RIGHT)) {
-        // if (gb.buttons.pressed(BUTTON_LEFT)) this -> moveX = 0.5;
-        // else this -> moveX = -0.5;
-      // } else this -> moveX = random(-1, 1) / 2;
+
       this -> moveX = (random(2 * this ->_X_SPEED)- this ->_X_SPEED) / 200;
-      this -> moveY = -(_Y_SPEED);
+      this -> moveY = -_Y_SPEED;
     }     
 }
 
