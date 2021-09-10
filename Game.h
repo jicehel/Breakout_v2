@@ -20,6 +20,7 @@ private:
     void    _showControls();
     void    _showOptions();
     void    _showCredits();
+    void    _showHiScores();
     bool    _checkCollision(int8_t obj1_x, int8_t obj1_y,uint8_t obj1_sizeX,uint8_t obj1_sizeY,int8_t obj2_x, int8_t obj2_y,uint8_t obj2_sizeX,uint8_t obj2_sizeY );
 
     

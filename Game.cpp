@@ -319,6 +319,41 @@ void Game::_showControls() {
     if (gb.buttons.pressed(BUTTON_B)) this ->_state = GameState::SHOW_OPTIONS; 
 }
 
+void Game::_showHiScores(){
+  bool doLoop = true;
+  uint8_t verticalMargin = 2;
+  while(doLoop){
+    if(gb.update()){
+      gb.display.clear();
+      gb.display.setColor(BLUE);
+      gb.display.cursorX = 15+random(0,2);
+      gb.display.cursorY = verticalMargin+random(0,2);
+      gb.display.println("BEST SCORES");
+      gb.display.textWrap = false;
+      gb.display.cursorX = 0;
+
+      for(byte thisScore = 0; thisScore < this -> _NUM_HIGHSCORE; thisScore++){
+        gb.display.setColor(YELLOW);
+        gb.display.cursorX = 0;
+        gb.display.cursorY = gb.display.fontHeight*2 + gb.display.fontHeight*thisScore + verticalMargin;
+        gb.display.print("  ");
+        if(this -> _highscore[thisScore] == 0) {
+          gb.display.print("- No HiScore yet -");
+        } else {
+          gb.display.print(this -> _name[thisScore]);
+          gb.display.cursorX = gb.display.width() - 4*gb.display.fontWidth;
+          gb.display.print(this -> _highscore[thisScore]);
+        }
+        gb.display.setColor(RED);
+        gb.display.setCursor(2, 54);
+        gb.display.print("Press <B> to return");
+        if(gb.buttons.pressed(BUTTON_B)) { doLoop = false; }
+      }
+    }
+  }
+  this ->_state = GameState::SHOW_OPTIONS;
+}
+
 void Game::_showCredits() {
     gb.display.drawImage(0, 0, creditsScreen);
     if (gb.buttons.pressed(BUTTON_B)) this ->_state = GameState::SHOW_OPTIONS; 
@@ -366,8 +401,8 @@ void Game::_showOptions() {
 
     gb.display.setColor(GREEN);
     gb.display.setCursor(col, line); gb.display.print("Use arrows to move"); line += vspace;
-    gb.display.setCursor(col, line); gb.display.print("<A> to validate"); line += vspace;
-    gb.display.setCursor(col, line); gb.display.print("<B> to return"); line += vspace;
+    gb.display.setCursor(col, line); gb.display.print("<A>: validate line"); line += vspace;
+    gb.display.setCursor(col, line); gb.display.print("<B>: return"); line += vspace;
 
     if (gb.buttons.pressed(BUTTON_UP)) if (_currentSelectedOption > 1) _currentSelectedOption--;
     if (gb.buttons.pressed(BUTTON_DOWN)) if (_currentSelectedOption < nb_options) _currentSelectedOption++;
@@ -406,10 +441,10 @@ void Game::_showTitleScreen() {
     gb.display.setCursor(4, 35);
     gb.display.setColor(LIGHTBLUE);
     gb.display.setFontSize(1);
-    gb.display.print("Press (A) to play");
+    gb.display.print("Press <A> to play");
     gb.display.setColor(YELLOW);
     gb.display.setCursor(2, 44);
-    gb.display.print("or (B) for options");
+    gb.display.print("or <B> for options");
     gb.display.setColor(ORANGE);
     gb.display.setCursor(8, 58);
     gb.display.print("V2.0 by Jicehel");
@@ -500,6 +535,10 @@ void Game::loop() {
 
       case GameState::SHOW_CONTROLS:
           this -> _showControls();
+      break;
+
+      case GameState::SHOW_SCORES:
+          this -> _showHiScores();
       break;
 
       case GameState::SHOW_CREDITS:
