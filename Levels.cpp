@@ -123,21 +123,18 @@ void Levels::levelDraw() {
 
 
 uint8_t Levels::levelCheckEnd() {
-    SerialUSB.print("levelBrickCount: ");
-    SerialUSB.print(this -> levelBrickCount);
-    SerialUSB.print("levelNbBricks: ");
-    SerialUSB.println(this -> levelNbBricks);
-    if (this -> levelBrickCount >= this -> levelNbBricks)  { return (game.currentLevelNb + 1); }
+    if (this -> levelBrickCount >= this -> levelNbBricks)  { 
+        return (game.currentLevelNb + 1); 
+    } else return 0;
 }
 
 
 void Levels::levelCheckEvent(){
     uint8_t newLevel = 0;
     newLevel = this -> levelCheckEnd();
-    SerialUSB.println(newLevel);
     if (newLevel > 0) {
       if (newLevel > Levels::_NUM_LEVEL) newLevel = 1;
-      SerialUSB.println("reset");
+      ball.ballCreateNew();
       this ->levelReset();
     }
 }
