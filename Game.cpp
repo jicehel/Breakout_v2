@@ -314,6 +314,52 @@ void Game::_saveHighScore(unsigned int test_score) {
     } // end of highscore test part
 }
 
+
+boolean Game::_drawNewHighscore(unsigned int newscore){
+  bool doLoop = true;
+  uint8_t verticalMargin = 2;
+  uint8_t horizontalMargin = 10;
+
+  if (newscore > this -> _highscore[this -> _NUM_HIGHSCORE-1]) {
+    while(doLoop){
+      if(gb.update()){
+        gb.display.clear();
+        gb.display.setColor(BLUE);
+        gb.display.cursorX = horizontalMargin+random(0,2);
+        gb.display.cursorY = verticalMargin + random(0,2);
+        gb.display.print("NEW HIGHSCORE");
+        gb.display.setColor(YELLOW);
+        gb.display.cursorX = horizontalMargin;
+        gb.display.cursorY = verticalMargin + gb.display.fontHeight*2;
+        gb.display.print("You      ");
+        gb.display.print(newscore);
+        gb.display.cursorX = horizontalMargin;
+        gb.display.cursorY = verticalMargin + gb.display.fontHeight*3;
+        gb.display.print("Best     ");
+        gb.display.print(this -> _highscore[0]);
+        gb.display.cursorX = horizontalMargin;
+        gb.display.cursorY = verticalMargin + gb.display.fontHeight*4;
+        gb.display.print("Worst    ");
+        gb.display.print(this -> _highscore[this -> _NUM_HIGHSCORE-1]);
+        gb.display.setColor(BLUE);
+        gb.display.cursorX = 0;
+        gb.display.cursorY = verticalMargin + gb.display.fontHeight*6;
+        gb.display.print("<A>:Save  <B>:Exit");
+        if(gb.buttons.pressed(BUTTON_A)){
+          if(game.sound)gb.sound.playOK();
+          doLoop = false;
+          return true;
+        }
+        if(gb.buttons.pressed(BUTTON_B)){
+          if(game.sound)gb.sound.playCancel();
+          doLoop = false;
+          return false;
+        }
+      }
+    }
+  } else return false; 
+}
+
 void Game::_showControls() {
     gb.display.drawImage(0, 0, controls);
     if (gb.buttons.pressed(BUTTON_B)) this ->_state = GameState::SHOW_OPTIONS; 
@@ -570,7 +616,13 @@ void Game::loop() {
       break;
 
       case GameState::GAMEOVER:
-          this -> _saveHighScore(score);
+          if (game.sound)gb.sound.fx(SLostlife);
+          gb.display.setCursor(6, 35);
+          gb.display.setFontSize(2);
+          gb.display.setColor(RED);
+          gb.display.print("GAME OVER");
+          delay(3000);
+          if(_drawNewHighscore(this -> score)) {this -> _saveHighScore(this -> score);}
           this -> _state   = this -> GameState::RESTART;
       break;
 
