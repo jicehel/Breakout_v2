@@ -41,9 +41,13 @@ const uint16_t bonusSteelBallData[] = {7,5,3, 5, 0xf80d, 0, 0xf80d,0x23e0,0x4208
 Image bonusSteelBall = Image(bonusSteelBallData);
 
 
-void Bonus::bonusMove() {
+void Bonus::bonusMove(float dt) {
     for (int8_t i = 0; i < game.bonusNb; i++)  {
-        bonus[i].y = bonus[i].y + _bonusSpeed;
+        SerialUSB.print("   i: ");
+        SerialUSB.print(i);
+        SerialUSB.print("   y: ");
+        SerialUSB.println(bonus[i].y);
+        bonus[i].y +=  _bonusSpeed * dt;
         this ->_bonusCheckCollision(i);
     } 
 }     
@@ -51,7 +55,7 @@ void Bonus::bonusMove() {
 
 void Bonus::_bonusCheckCollision(uint8_t i) {
 // Test if bonus touch the Paddle
-    if (((bonus[i].x / this ->_bonusMultiplier + this ->sizeX) >= paddle.x) && (bonus[i].x / this ->_bonusMultiplier <= paddle.x + paddle.sizeX) && ((bonus[i].y / this ->_bonusMultiplier + this ->sizeY) >= paddle.y) && (bonus[i].y / this ->_bonusMultiplier <= paddle.y + paddle.sizeY)) {
+    if (((bonus[i].x + this ->sizeX) >= paddle.x) && (bonus[i].x <= paddle.x + paddle.sizeX) && ((bonus[i].y  + this ->sizeY) >= paddle.y) && (bonus[i].y <= paddle.y + paddle.sizeY)) {
         switch (bonus[i].bType) {
             case 11 :  // Bonus life
                 game.lives++;
@@ -123,39 +127,40 @@ void Bonus::bonusDraw() {
 
         switch (bonus[i].bType) {
             case 11 :  // Bonus life
-            gb.display.drawImage(bonus[i].x / _bonusMultiplier, bonus[i].y/_bonusMultiplier, bonusVie);
+            // gb.display.drawImage(bonus[i].x / _bonusMultiplier, bonus[i].y/_bonusMultiplier, bonusVie);
+            gb.display.drawImage(bonus[i].x, bonus[i].y, bonusVie);
             break;
 
             case 12 :  // Bonus Paddle+
-            gb.display.drawImage(bonus[i].x / _bonusMultiplier, bonus[i].y/_bonusMultiplier, bonusPaddlePlus);
+            gb.display.drawImage(bonus[i].x, bonus[i].y, bonusPaddlePlus);
             break;
 
             case 13 :  // Malus Paddle -
-            gb.display.drawImage(bonus[i].x / _bonusMultiplier, bonus[i].y/_bonusMultiplier, bonusPaddleMalus);
+            gb.display.drawImage(bonus[i].x, bonus[i].y, bonusPaddleMalus);
             break;
 
             case 14 :  // Bonus Glue
-            gb.display.drawImage(bonus[i].x / _bonusMultiplier, bonus[i].y/_bonusMultiplier, bonusGlue);
+            gb.display.drawImage(bonus[i].x, bonus[i].y, bonusGlue);
             break;
 
             case 17 :  // Bonus Mini Paddle
-            gb.display.drawImage(bonus[i].x / _bonusMultiplier, bonus[i].y/_bonusMultiplier, bonusMalusPaddleRed);
+            gb.display.drawImage(bonus[i].x, bonus[i].y, bonusMalusPaddleRed);
             break;
             
             case 18 : // Malus life
-            gb.display.drawImage(bonus[i].x/_bonusMultiplier, bonus[i].y/_bonusMultiplier, bonusMalusLife);
+            gb.display.drawImage(bonus[i].x, bonus[i].y, bonusMalusLife);
             break;
 
             case 19 : // Malus Ball -
-            gb.display.drawImage(bonus[i].x/_bonusMultiplier, bonus[i].y/_bonusMultiplier, bonusMalusBall);
+            gb.display.drawImage(bonus[i].x, bonus[i].y, bonusMalusBall);
             break;
             
             case 20 : // Bonus Ball +
-            gb.display.drawImage(bonus[i].x/_bonusMultiplier, bonus[i].y/_bonusMultiplier, bonusBall);
+            gb.display.drawImage(bonus[i].x, bonus[i].y, bonusBall);
             break;
 
             case 21 : // Bonus Metal ball
-            gb.display.drawImage(bonus[i].x/_bonusMultiplier, bonus[i].y/_bonusMultiplier, bonusSteelBall);
+            gb.display.drawImage(bonus[i].x, bonus[i].y, bonusSteelBall);
             break;
             
       } // end Switch
@@ -175,8 +180,8 @@ void Bonus::bonusDraw() {
 
 
  void Bonus::bonusAdd(uint8_t bType,uint8_t bx,uint8_t by){
-  bonus[game.bonusNb].x = bx*_bonusMultiplier;
-  bonus[game.bonusNb].y = by*_bonusMultiplier;
+  bonus[game.bonusNb].x = bx;  // *_bonusMultiplier;
+  bonus[game.bonusNb].y = by;  // *_bonusMultiplier;
   bonus[game.bonusNb].bType = bType;
   game.bonusNb++;
 }

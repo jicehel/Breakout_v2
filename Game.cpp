@@ -594,6 +594,7 @@ void Game::loop() {
       case GameState::RUNNING:
           // Calculate
           ball.ballMove(_deltaTime);
+          bonus[0].bonusMove(_deltaTime);
           paddle.paddleMove();
           this -> _checkLives();
           if (ball.free) this -> _checkBrickCollision();
@@ -601,10 +602,11 @@ void Game::loop() {
           // show
           gb.display.clear();
           gb.display.drawImage(0,0,barre);
+          game.showInfos();
           level.levelDraw();
           ball.ballDraw();
           paddle.paddleDraw();
-          game.showInfos();
+          bonus[0].bonusDraw();
 
           // check
           level.levelCheckEvent();

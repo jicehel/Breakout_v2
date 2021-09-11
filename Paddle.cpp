@@ -12,7 +12,7 @@ void Paddle::paddleReset() {
   this -> sizeX = this -> _paddleDefaulSize;
   this -> x = (WIDTH - this -> sizeX)/2;
   this -> y = this -> _yPaddle;
-  this -> glue =false;
+  this -> glue = false;
   this -> pSpeed = 3;
 }
 

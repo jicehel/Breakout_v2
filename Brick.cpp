@@ -30,21 +30,24 @@ void Brick::brickDraw(int8_t brickType, int8_t xBrique, int8_t yBrique) {
 
 void Brick::brickCollisionDetected(int8_t r,int8_t c ) {
   //If a collison has occured
-
   if (currentLevel[r][c].typeBrick > 1) {
          // Manage bonus / malus add
          if (currentLevel[r][c].typeBrick == 11 || currentLevel[r][c].typeBrick == 12 || currentLevel[r][c].typeBrick == 14 || currentLevel[r][c].typeBrick == 20 || currentLevel[r][c].typeBrick == 21 ) {
             if (game.sound) gb.sound.fx(SBonus); 
+            bonus[0].bonusAdd(currentLevel[r][c].typeBrick,this -> sizeX * c,((r+1)*this -> sizeY  + YTOP));
+            currentLevel[r][c].typeBrick = 0;
+            currentLevel[r][c].isHit = true;
+            level.levelBrickCount++;
+            // SerialUSB.print("Bonus récupéré: ");
+            // SerialUSB.println(bonus[game.bonusNb -1].bType);
+         } else if (currentLevel[r][c].typeBrick == 13 || currentLevel[r][c].typeBrick == 17 || currentLevel[r][c].typeBrick == 18 || currentLevel[r][c].typeBrick == 19 ) {
+            if (game.sound)gb.sound.fx(SLostlife); 
             bonus[0].bonusAdd(currentLevel[r][c].typeBrick,sizeX * c,((r+1)*sizeY  + YTOP));
             currentLevel[r][c].typeBrick = 0;
             currentLevel[r][c].isHit = true;
             level.levelBrickCount++;
-         } else if (currentLevel[r][c].typeBrick == 13 || currentLevel[r][c].typeBrick == 17 || currentLevel[r][c].typeBrick == 18 || currentLevel[r][c].typeBrick == 19 ) {
-            if (game.sound)gb.sound.fx(SLostlife); 
-            bonus[0].bonusAdd(18,sizeX * c,((r+1)*sizeY  + YTOP));
-            currentLevel[r][c].typeBrick = 0;
-            currentLevel[r][c].isHit = true;
-            level.levelBrickCount++;
+            // SerialUSB.print("Malus récupéré: ");
+            // SerialUSB.println(bonus[game.bonusNb -1].bType);
          } else if ( currentLevel[r][c].typeBrick > 2) {
             currentLevel[r][c].typeBrick--;
          } else {
@@ -60,9 +63,9 @@ void Brick::bounceY(int8_t r,int8_t c, bool bounced) {
   //Only bounce once each ball move
   
   if (!bounced) {
-    ball.moveY = - ball.moveY; // + random(-(_Y_SPEED), _Y_SPEED)) / 600;
-    ball.y += ball.moveY;
-    if (game.sound)gb.sound.tone(261, 200);
+    if (!ball.metal) ball.moveY = - ball.moveY; // + random(-(_Y_SPEED), _Y_SPEED)) / 600;
+    // ball.y += ball.moveY;
+    if (game.sound)gb.sound.tone(100 + ball.y * 6, 50);   // 261
     delay(5);
   }
 }
@@ -71,9 +74,9 @@ void Brick::bounceX(int8_t r,int8_t c, bool bounced) {
   //Only bounce once each ball move
   
   if (!bounced) {
-    ball.moveX = - ball.moveX; // + random(-(_X_SPEED), _X_SPEED)) / 600;
-    ball.x += ball.moveX;
-    if (game.sound)gb.sound.tone(261, 200);
+    if (!ball.metal)ball.moveX = - ball.moveX; // + random(-(_X_SPEED), _X_SPEED)) / 600;
+    // ball.x += ball.moveX;
+    if (game.sound)gb.sound.tone(100 + ball.y * 6, 50);
     delay(5);
   }
 }

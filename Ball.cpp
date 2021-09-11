@@ -52,7 +52,7 @@ void Ball::_ballTestRebound() {
     if (this -> x < 1) {
       this -> x = 1;
       this -> moveX = -this -> moveX;
-      if (game.sound) gb.sound.tone(523, 200);
+      if (game.sound) gb.sound.tone(523, 100);
       if (game.lightSides) { gb.lights.drawPixel(0, 0, YELLOW);gb.lights.drawPixel(0, 1, YELLOW);gb.lights.drawPixel(0, 2, YELLOW);gb.lights.drawPixel(0, 3, YELLOW); }
       delay(15);
     }
@@ -61,7 +61,7 @@ void Ball::_ballTestRebound() {
     if (this -> x > (WIDTH - 2 * this -> radius)) {
       this -> x = WIDTH - 2 * this -> radius;
       this -> moveX = -this -> moveX;
-      if (game.sound)gb.sound.tone(523, 200);
+      if (game.sound)gb.sound.tone(523, 100);
       if (game.lightSides) { gb.lights.drawPixel(1, 0, YELLOW);gb.lights.drawPixel(1, 1, YELLOW);gb.lights.drawPixel(1, 2, YELLOW);gb.lights.drawPixel(1, 3, YELLOW); }
       delay(15);
     }
@@ -76,7 +76,7 @@ void Ball::_ballTestRebound() {
         //limit horizontal speed
         if (this -> moveX < -MaxXSpeed)  this -> moveX = -MaxXSpeed;
         if (this -> moveX >  MaxXSpeed)  this -> moveX =  MaxXSpeed;
-        if (game.sound) gb.sound.tone(200, 200);
+        if (game.sound) gb.sound.tone(1000, 50);
         if (game.lightSides) { gb.lights.drawPixel(0, 3, YELLOW);gb.lights.drawPixel(1, 3, YELLOW); }
         delay(2);
       } else this -> free = false;  
