@@ -19,9 +19,9 @@ public:
 
     uint8_t levelBrickCount, levelNbBricks, levelDefaultBonusBrick;
 
-    void    levelReset();
-    uint8_t levelCheckEnd();
-    void    levelCheckEvent();
-    void    levelDraw();
+    void    reset();
+    uint8_t checkEnd();
+    void    checkEvent();
+    void    draw();
 
 };

@@ -25,8 +25,8 @@ public:
     boolean     glue;
 
     void paddleReset();
-    void paddleMove();
-    void paddleDraw();
+    void move();
+    void draw();
 
     
 };

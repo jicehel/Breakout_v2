@@ -88,7 +88,7 @@ int8_t levelBricksData[Levels::_NUM_LEVEL][Levels::_ROWS * Levels::_COLUMNS + 1]
 Brick currentLevel[Levels::_ROWS][Levels::_COLUMNS];
 
 
-void Levels::levelReset() {
+void Levels::reset() {
   this -> levelBrickCount = 0;
   this -> levelNbBricks = 0;
   game.bonusNb = 0; 
@@ -109,12 +109,12 @@ void Levels::levelReset() {
 }
 
 
-void Levels::levelDraw() {
+void Levels::draw() {
   for (int8_t row = 0; row <this -> _ROWS; row++) {
     for (int8_t column = 0; column < this -> _COLUMNS; column++) {
       if (!(currentLevel[row][column].isHit)) {
         if (currentLevel[row][column].typeBrick > 0) {
-          brick.brickDraw(currentLevel[row][column].typeBrick, brick.sizeX * column, brick.sizeY * row + YTOP);
+          brick.draw(currentLevel[row][column].typeBrick, brick.sizeX * column, brick.sizeY * row + YTOP);
         }  
       }  
     } // -- End for Column
@@ -122,19 +122,19 @@ void Levels::levelDraw() {
 }
 
 
-uint8_t Levels::levelCheckEnd() {
+uint8_t Levels::checkEnd() {
     if (this -> levelBrickCount >= this -> levelNbBricks)  { 
         return (game.currentLevelNb + 1); 
     } else return 0;
 }
 
 
-void Levels::levelCheckEvent(){
+void Levels::checkEvent(){
     uint8_t newLevel = 0;
-    newLevel = this -> levelCheckEnd();
+    newLevel = this -> checkEnd();
     if (newLevel > 0) {
       if (newLevel > Levels::_NUM_LEVEL) newLevel = 1;
-      ball.ballCreateNew();
-      this ->levelReset();
+      ball.init();
+      this ->reset();
     }
 }

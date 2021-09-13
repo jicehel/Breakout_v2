@@ -17,8 +17,6 @@ Paddle paddle;
 Bonus bonus[20];
 
 void setup() {
-    gb.begin();
-    gb.setFrameRate(35);
     game.init();
 }
 

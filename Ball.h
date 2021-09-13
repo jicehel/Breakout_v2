@@ -8,15 +8,15 @@ class Ball
 
 private:
 
-    static constexpr float _X_SPEED = 6;
+    static constexpr float _X_SPEED = 1;
     static constexpr float _Y_SPEED = 0.06;       
 
     Gamebuino_Meta::Color    color;
 
-    void _ballMoveFree(float dt);
-    void _ballTestRebound();
-    void _ballTestReachBottom();
-    void _ballFollowPaddle();
+    void _moveFree(float dt);
+    void _testRebound();
+    void _testReachBottom();
+    void _followPaddle();
 
 
 public:
@@ -32,9 +32,9 @@ public:
     bool        free;
     bool        metal;
 
-    void ballCreateNew();
-    void ballMove(float dt);
-    void ballDraw();
+    void init();
+    void move(float dt);
+    void draw();
 
     
 };

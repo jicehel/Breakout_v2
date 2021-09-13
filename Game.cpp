@@ -214,6 +214,8 @@ const uint16_t barreData[] = {80,12,1, 1, 0, 0, 0xffff,0xffff,0xffff,0xc617,0xc6
 Image barre = Image(barreData);
 
 void Game::init() {
+    gb.begin();
+    gb.setFrameRate(35);
     this -> _oldTime = 0;
     this -> lightSides = false;
     this -> sound = true;
@@ -239,8 +241,8 @@ void Game::_newGame() {
       this -> currentLevelNb  = 1;
       this -> lives = 3;
       this -> score = 0; 
-      ball.ballCreateNew();
-      level.levelReset();
+      ball.init();
+      level.reset();
       paddle.paddleReset();
       this -> _state = GameState::RUNNING; 
 }
@@ -521,7 +523,7 @@ void Game::_checkBrickCollision() {
             
               if (this -> _checkCollision(ballLeft, ballTop, ball.sizeX, ball.sizeY,brickLeft,brickTop,brick.sizeX,brick.sizeY)) {
 
-                  brick.brickCollisionDetected( row, column ); 
+                  brick.collisionDetected( row, column ); 
 
               
                   if (ballBottom > brickBottom || ballTop   < brickTop  ) {
@@ -593,9 +595,9 @@ void Game::loop() {
 
       case GameState::RUNNING:
           // Calculate
-          ball.ballMove(_deltaTime);
-          bonus[0].bonusMove(_deltaTime);
-          paddle.paddleMove();
+          ball.move(_deltaTime);
+          bonus[0].move(_deltaTime);
+          paddle.move();
           this -> _checkLives();
           if (ball.free) this -> _checkBrickCollision();
 
@@ -603,13 +605,13 @@ void Game::loop() {
           gb.display.clear();
           gb.display.drawImage(0,0,barre);
           game.showInfos();
-          level.levelDraw();
-          ball.ballDraw();
-          paddle.paddleDraw();
-          bonus[0].bonusDraw();
+          level.draw();
+          ball.draw();
+          paddle.draw();
+          bonus[0].draw();
 
           // check
-          level.levelCheckEvent();
+          level.checkEvent();
           if (gb.buttons.pressed(BUTTON_MENU) )  this -> _state   = this -> GameState::PAUSE;
       break;
 

@@ -15,7 +15,7 @@ const uint16_t ball4MetalData[] = {4,4,1, 1, 0xf80d, 0, 0xf80d,0xc618,0xad75,0xf
 Image ball4Metal = Image(ball4MetalData);
     
 
-void Ball::ballCreateNew (){
+void Ball::init(){
   this -> free = false;
   this -> metal = false;
   this -> radius = 2;
@@ -26,19 +26,19 @@ void Ball::ballCreateNew (){
   this -> color  = YELLOW;
 }
 
-void Ball::ballMove(float dt) {
+void Ball::move(float dt) {
     if (this -> free) {
-      this ->_ballMoveFree(dt);
-      this ->_ballTestRebound();
-      this ->_ballTestReachBottom();
+      this ->_moveFree(dt);
+      this ->_testRebound();
+      this ->_testReachBottom();
     } else {
-      this ->_ballFollowPaddle();
+      this ->_followPaddle();
     }
     if (game.lightSides) gb.lights.fill(BLACK);   
 }
 
 
-void Ball::_ballTestRebound() {
+void Ball::_testRebound() {
     //Bounce off top edge
     if (this -> y <= YTOP) {
       this -> y = YTOP;
@@ -84,7 +84,7 @@ void Ball::_ballTestRebound() {
 }
 
 
-void Ball::_ballTestReachBottom() {
+void Ball::_testReachBottom() {
   //Lose a life if bottom edge hit
   if (this -> y > paddle.y - this -> radius + 0.5 * paddle.sizeY) {
       if (game.lightSides)gb.lights.fill(RED);
@@ -100,13 +100,13 @@ void Ball::_ballTestReachBottom() {
 }
 
 
-void Ball::_ballMoveFree(float dt) {
+void Ball::_moveFree(float dt) {
     this -> x += this -> moveX * dt;
     this -> y += this -> moveY * dt;
 }
     
  
-void Ball::_ballFollowPaddle() {
+void Ball::_followPaddle() {
     this -> x = paddle.x + (paddle.sizeX - 2*ball.radius)/2 ;
     this -> y = paddle.y - 2 * this -> radius;
     //Release ball if FIRE pressed
@@ -121,7 +121,7 @@ void Ball::_ballFollowPaddle() {
 }
 
 
-void Ball::ballDraw() {
+void Ball::draw() {
   gb.display.setColor(this -> color);
   if (!(this -> metal)) { 
       switch (this -> radius) {

@@ -41,88 +41,88 @@ const uint16_t bonusSteelBallData[] = {7,5,3, 5, 0xf80d, 0, 0xf80d,0x23e0,0x4208
 Image bonusSteelBall = Image(bonusSteelBallData);
 
 
-void Bonus::bonusMove(float dt) {
+void Bonus::move(float dt) {
     for (int8_t i = 0; i < game.bonusNb; i++)  {
         SerialUSB.print("   i: ");
         SerialUSB.print(i);
         SerialUSB.print("   y: ");
         SerialUSB.println(bonus[i].y);
         bonus[i].y +=  _bonusSpeed * dt;
-        this ->_bonusCheckCollision(i);
+        this ->_checkCollision(i);
     } 
 }     
 
 
-void Bonus::_bonusCheckCollision(uint8_t i) {
+void Bonus::_checkCollision(uint8_t i) {
 // Test if bonus touch the Paddle
     if (((bonus[i].x + this ->sizeX) >= paddle.x) && (bonus[i].x <= paddle.x + paddle.sizeX) && ((bonus[i].y  + this ->sizeY) >= paddle.y) && (bonus[i].y <= paddle.y + paddle.sizeY)) {
         switch (bonus[i].bType) {
             case 11 :  // Bonus life
                 game.lives++;
-                this ->_bonusClear(i);;
+                this ->_clear(i);;
                 if (game.sound)gb.sound.fx(SBonus);
             break;
 
             case 12 :  // Paddle size ++
                 if (paddle.sizeX < paddle.paddleWidthMax) paddle.sizeX = paddle.sizeX + 2; 
-                this ->_bonusClear(i);;
+                this ->_clear(i);;
                 if (game.sound)gb.sound.fx(SBonus);
             break;
 
             case 13 :  // Paddle size --
                 if (paddle.sizeX > paddle.paddleWidthMin) paddle.sizeX = paddle.sizeX - 2; 
-                this ->_bonusClear(i);;
+                this ->_clear(i);;
                 if (game.sound)gb.sound.fx(SLostlife);
             break;
 
             case 14 :  // Glue
                 paddle.glue = true; 
-                this ->_bonusClear(i);;
+                this ->_clear(i);;
                 paddle.nbGlue = NB_DEF_GLUE;
                 if (game.sound)gb.sound.fx(SLostlife);
             break;
 
             case 17 :  // Paddle mini
                 paddle.sizeX = paddle.paddleWidthMin;
-                this ->_bonusClear(i);;
+                this ->_clear(i);;
                 if (game.sound)gb.sound.fx(SLostlife);
             break;
 
             case 18 : // Malus life
                 game.lives--;
-                this ->_bonusClear(i);;
+                this ->_clear(i);;
                 if (game.sound)gb.sound.fx(SLostlife);
             break;
 
             case 19 :  // Ball size ++
                 if (ball.radius < ball.ballSizeMaxi) ball.radius++; 
                 ball.metal = false;
-                this ->_bonusClear(i);;
+                this ->_clear(i);;
                 if (game.sound)gb.sound.fx(SBonus);
             break;
 
             case 20 :  // Ball size --
                 if (ball.radius > ball.ballSizeMini) ball.radius = ball.radius - 1; 
                 ball.metal = false;
-                this ->_bonusClear(i);;
+                this ->_clear(i);;
                 if (game.sound)gb.sound.fx(SLostlife);
             break;
 
             case 21 :  // Ball metal
                 ball.radius = 2; 
                 ball.metal = true;
-                this ->_bonusClear(i);;
+                this ->_clear(i);;
                 if (game.sound)gb.sound.fx(SBonus);
             break;        
             
         } // end Switch
     } // enf If
-    if (bonus[i].y > 64) this ->_bonusClear(i);;
+    if (bonus[i].y > 64) this ->_clear(i);;
  } // end Test_collision_Bonus
 
 
 
-void Bonus::bonusDraw() {
+void Bonus::draw() {
     for (int8_t i = 0; i < game.bonusNb; i++)  {
 
         switch (bonus[i].bType) {
@@ -169,7 +169,7 @@ void Bonus::bonusDraw() {
 } // end Draw_Bonus
 
 
- void Bonus::_bonusClear(uint8_t i){
+ void Bonus::_clear(uint8_t i){
     for (int8_t temp = 0; temp < game.bonusNb; temp++)  {
         bonus[temp].x =  bonus[temp+1].x;
         bonus[temp].y =  bonus[temp+1].y;
@@ -179,7 +179,7 @@ void Bonus::bonusDraw() {
  } 
 
 
- void Bonus::bonusAdd(uint8_t bType,uint8_t bx,uint8_t by){
+ void Bonus::initNew(uint8_t bType,uint8_t bx,uint8_t by){
   bonus[game.bonusNb].x = bx;  // *_bonusMultiplier;
   bonus[game.bonusNb].y = by;  // *_bonusMultiplier;
   bonus[game.bonusNb].bType = bType;

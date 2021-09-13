@@ -1,8 +1,8 @@
 #include <Gamebuino-Meta.h>
 #include "Global.h"
 
-const uint16_t paddleLeftSideData[] = {2,2,1, 1, 0, 0, 0x7980,0xfb40,0x7800,0x7980};  //  brown, orange and dark brown, brown 
-Image paddleLeftSide = Image(paddleLeftSideData);
+const uint16_t leftSideData[] = {2,2,1, 1, 0, 0, 0x7980,0xfb40,0x7800,0x7980};  //  brown, orange and dark brown, brown 
+Image paddleLeftSide = Image(leftSideData);
 
 const uint16_t paddleRightSideData[] = {2,2,1, 1, 0, 0, 0xfb40,0x7980,0x7980,0x7800};  // orange, brown and braon, dark drown
 Image paddleRightSide = Image(paddleRightSideData);
@@ -17,7 +17,7 @@ void Paddle::paddleReset() {
 }
 
 
-void Paddle::paddleMove() {
+void Paddle::move() {
   if (this -> x < (WIDTH - this -> sizeX)) 
     if (gb.buttons.repeat(BUTTON_RIGHT,0)) this -> x = this -> x + this -> pSpeed;
   if (this -> x > 0) 
@@ -27,7 +27,7 @@ void Paddle::paddleMove() {
 }
 
 
-void Paddle::paddleDraw() {
+void Paddle::draw() {
   if (this -> glue == 0) {
      gb.display.setColor(WHITE);
   } else {
